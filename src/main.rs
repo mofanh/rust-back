@@ -3,6 +3,7 @@ mod config;
 mod dtos;
 mod error;
 mod db;
+mod utils;
 
 use std::sync::Arc;
 
