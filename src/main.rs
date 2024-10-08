@@ -6,6 +6,8 @@ mod db;
 mod utils;
 mod middleware;
 mod mail;
+mod handler;
+mod routes;
 
 use std::sync::Arc;
 
@@ -13,6 +15,7 @@ use axum::{http::{header::{ACCEPT, AUTHORIZATION, CONTENT_TYPE}, HeaderValue, Me
 use config::Config;
 use db::DBClient;
 use dotenv::dotenv;
+use routes::create_router;
 // use routes::create_router;
 use sqlx::postgres::PgPoolOptions;
 use tower_http::cors::CorsLayer;
@@ -50,7 +53,7 @@ async fn main() {
     };
 
     let cors = CorsLayer::new()
-        .allow_origin("http://localhost:3000".parse::<HeaderValue>().unwrap())
+        .allow_origin("http://localhost:8000".parse::<HeaderValue>().unwrap())
         .allow_headers([AUTHORIZATION, ACCEPT, CONTENT_TYPE])
         .allow_credentials(true)
         .allow_methods([Method::GET, Method::POST,Method::PUT]);
@@ -61,10 +64,7 @@ async fn main() {
         db_client,
     };
 
-    let app = Router::new()
-        .layer(Extension(app_state))
-        .layer(cors.clone());
-    // let app = create_router(Arc::new(app_state.clone())).layer(cors.clone());
+    let app = create_router(Arc::new(app_state.clone())).layer(cors.clone());
 
     println!("{}", format!("🚀 Server is running on http://localhost:{}", config.port));
 

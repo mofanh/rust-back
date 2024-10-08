@@ -1,3 +1,4 @@
+// data transfer object
 use core::str;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
@@ -39,7 +40,7 @@ pub struct LoginUserDto {
     pub password: String,
 }
 
-#[derive(Serialize, Deserialize, Validate)]
+#[derive(Serialize, Deserialize, Validate, Debug)]
 pub struct RequestQueryDto {
     #[validate(range(min = 1))]
     pub page: Option<usize>,
